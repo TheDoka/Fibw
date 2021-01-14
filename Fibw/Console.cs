@@ -11,8 +11,10 @@ namespace Fibw
     {
         Instance aFibw;
         public string currentFolder;
-        string[] commands = new string[] { "init", "commit", "push", "quit", "pause", 
-                                           "info", "check", "cd", "ls", "clear", "diff", "versions" };
+        string[] commands = new string[] { "init", "commit", "push", "quit", "pause", "info", "check", 
+                                            "cd", "ls", "clear", "diff", "versions", "update",
+                                            "revert", "cat", "tree"
+                                          };
         int status = 1;
 
         public FConsole(Instance fibw)
@@ -49,7 +51,11 @@ namespace Fibw
                     }
                     else
                     {
-                        warningPrint("Unknown command!");
+                        if (command.Trim() != "")
+                        {
+                            warningPrint("Unknown command!");
+                        }
+                        
                     }
                 }
             });
@@ -73,6 +79,34 @@ namespace Fibw
                     break;
                 case "commit": aFibw.commit(); break;
                 case "push": aFibw.push(); break;
+                case "tree":
+                    Console.WriteLine(aFibw.rep.tree.displayTree());
+                    
+                    break;
+                case "cat":
+                    if (arguments.Length < 2) { print("Invalid command."); }
+                    else
+                    {
+                        if (arguments.Length == 3)
+                        {
+                            Console.WriteLine(aFibw.rep.tree.cat(arguments[1], arguments[2]));
+                        } else {
+                            Console.WriteLine(aFibw.rep.tree.cat(arguments[1]));
+                        }
+                        
+                    } 
+                    break;
+                case "revert":
+                    if (arguments.Length < 3) { print("Invalid command."); } else
+                    {
+                        Console.WriteLine(aFibw.rep.tree.revert(arguments[1], arguments[2]));
+                    }
+                    break;
+                case "update":
+                    Console.WriteLine(aFibw.rep.tree.update(arguments[1]));
+                    aFibw.rep.createHeaderFile();
+
+                        break;
                 case "diff": Console.WriteLine(aFibw.rep.tree.displayChanges()); break;
                 case "versions":
                     if (arguments.Length < 2) { print("Invalid command."); } else{
